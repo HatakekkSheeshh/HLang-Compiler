@@ -9,3 +9,6 @@ RUN pip3 install --no-cache-dir pytest antlr4-python3-runtime==4.13.2 pytest-tim
 WORKDIR /workspace
 
 COPY . /workspace
+
+COPY .devcontainer/CS /usr/local/bin/CS
+RUN chmod +x /usr/local/bin/CS

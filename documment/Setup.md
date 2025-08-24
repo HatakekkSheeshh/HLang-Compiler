@@ -69,6 +69,7 @@ example/
 ```
 - **Chạy chương trình thành công**:  
 `python3 run.py example/main`  
+`CS example/main`  
 
 - **Kiểm tra lỗi từ vựng (Lexer)**:  
 `python3 run.py example/error_lexer`  
