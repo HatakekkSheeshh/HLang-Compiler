@@ -18,3 +18,5 @@ root@c3c1e5a127e8:/workspace# CS example/main
 Program output:
 7
 ```
+
+![Run code](documment/images/Run.gif)
