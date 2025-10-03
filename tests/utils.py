@@ -1,17 +1,18 @@
 import sys
 import os
+from subprocess import run, TimeoutExpired, PIPE
 import subprocess
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "build"))
 
 from antlr4 import *
+from src.grammar.lexererr import UncloseString, IllegalEscape
 
-
-from build.CSLexer import CSLexer
+from build.HLangLexer import HLangLexer
 class Tokenizer:
     def __init__(self, input_string):
         self.input_stream = InputStream(input_string)
-        self.lexer = CSLexer(self.input_stream)
+        self.lexer = HLangLexer(self.input_stream)
 
     def get_tokens(self):
         tokens = []
@@ -41,35 +42,35 @@ class Tokenizer:
                 return str(e)
         return ",".join(tokens)
 
-from build.CSParser import CSParser
+from build.HLangParser import HLangParser
 from src.utils.error_listener import NewErrorListener
 class Parser:
     def __init__(self, input_string):
         self.input_stream = InputStream(input_string)
-        self.lexer = CSLexer(self.input_stream)
+        self.lexer = HLangLexer(self.input_stream)
         self.token_stream = CommonTokenStream(self.lexer)
-        self.parser = CSParser(self.token_stream)
+        self.parser = HLangParser(self.token_stream)
         self.parser.removeErrorListeners()
         self.parser.addErrorListener(NewErrorListener.INSTANCE)
 
     def parse(self):
         try:
-            self.parser.program()  # Assuming 'program' is the entry point of your grammar
+            self.parser.program()  # program is the entry point of HLang grammar
             return "success"
         except Exception as e:
-            return str(e)
+            return f"{str(e)}"
 
 from src.astgen.ast_generation import ASTGeneration
 from src.utils.nodes import *
 class ASTGenerator:
-    """Class to generate AST from CS source code."""
+    """Class to generate AST from HLang source code."""
 
     def __init__(self, input_string):
         self.input_string = input_string
         self.input_stream = InputStream(input_string)
-        self.lexer = CSLexer(self.input_stream)
+        self.lexer = HLangLexer(self.input_stream)
         self.token_stream = CommonTokenStream(self.lexer)
-        self.parser = CSParser(self.token_stream)
+        self.parser = HLangParser(self.token_stream)
         self.ast_generator = ASTGeneration()
 
     def generate(self):
@@ -81,7 +82,7 @@ class ASTGenerator:
         return ast
 
 from src.semantics.static_checker import StaticChecker
-from src.semantics.static_error import StaticError
+from src.semantics.static_error import StaticError, Identifier, Function
 class Checker:
     """Class to perform static checking on the AST."""
 
@@ -125,14 +126,13 @@ class CodeGenerator:
         if isinstance(ast, str): 
             ast_gen = ASTGenerator(ast)
             ast = ast_gen.generate()
-        #try:
-            # Change to runtime directory and generate code from AST
-        # Find generated .j file
-        class_file = os.path.join(self.runtime_dir, "CS.class")
-        
+            
+        # Clean up any existing class files
+        class_file = os.path.join(self.runtime_dir, "HLang.class")
         if os.path.exists(class_file):
             os.remove(class_file)
             
+        # Generate Jasmin code
         original_dir = os.getcwd()
         os.chdir(self.runtime_dir)
         try:
@@ -141,14 +141,14 @@ class CodeGenerator:
             os.chdir(original_dir)
         
         # Find generated .j file
-        j_file = os.path.join(self.runtime_dir, "CS.j")
+        j_file = os.path.join(self.runtime_dir, "HLang.j")
         if not os.path.exists(j_file):
             return "Error: No .j file generated"
 
         # Assemble to .class
         try:
             result = subprocess.run(
-                ["java", "-jar", "jasmin.jar", "CS.j"],
+                ["java", "-jar", "jasmin.jar", "HLang.j"],
                 cwd=self.runtime_dir,
                 capture_output=True,
                 text=True,
@@ -160,7 +160,7 @@ class CodeGenerator:
             
             # Run program
             result = subprocess.run(
-                ["java" , "CS"],
+                ["java" , "HLang"],
                 cwd=self.runtime_dir,
                 capture_output=True,
                 text=True,

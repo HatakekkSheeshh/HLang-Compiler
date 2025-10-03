@@ -1,5 +1,5 @@
 """
-Visitor interface for AST traversal in CS programming language.
+Visitor interface for AST traversal in HLang programming language.
 This module defines the abstract visitor pattern interface for traversing
 and processing AST nodes.
 """
@@ -14,50 +14,108 @@ if TYPE_CHECKING:
 class ASTVisitor(ABC):
     """Abstract base class for AST visitors."""
 
-
     def visit(self, node: "ASTNode", o: Any = None):
-        """Dispatch visit to the correct method based on node type."""
         return node.accept(self, o)
 
-    # =========================================================================
     # Program and declarations
-    # =========================================================================
     @abstractmethod
-    def visit_program(self, node: "Program", o: Any = None):
-        pass
-
-    # =========================================================================
-    # Statements
-    # =========================================================================
-    @abstractmethod
-    def visit_const_decl(self, node: "ConstStmt", o: Any = None):
-        pass
-
-    @abstractmethod
-    def visit_call_stmt(self, node: "CallStmt", o: Any = None):
-        pass
+    def visit_program(self, node: 'Program'): pass
     
-    # =========================================================================
-    # Types
-    # =========================================================================
     @abstractmethod
-    def visit_int_type(self, node: "IntType", o: Any = None):
+    def visit_const_decl(self, node: 'ConstDecl'): pass
+    
+    @abstractmethod
+    def visit_func_decl(self, node: 'FuncDecl'): pass
+    
+    @abstractmethod
+    def visit_param(self, node: 'Param'): pass
+    
+    # Type system
+    @abstractmethod
+    def visit_int_type(self, node: 'IntType'): pass
+    
+    @abstractmethod
+    def visit_float_type(self, node: 'FloatType'): pass
+    
+    @abstractmethod
+    def visit_bool_type(self, node: 'BoolType'): pass
+    
+    @abstractmethod
+    def visit_string_type(self, node: 'StringType'): pass
+    
+    @abstractmethod
+    def visit_void_type(self, node: 'VoidType'): pass
+    
+    @abstractmethod
+    def visit_array_type(self, node: 'ArrayType'): pass
+    
+    # Statements
+    @abstractmethod
+    def visit_var_decl(self, node: 'VarDecl'): pass
+    
+    @abstractmethod
+    def visit_assignment(self, node: 'Assignment'): pass
+    
+    @abstractmethod
+    def visit_if_stmt(self, node: 'IfStmt'): pass
+    
+    @abstractmethod
+    def visit_while_stmt(self, node: 'WhileStmt'): pass
+    
+    @abstractmethod
+    def visit_for_stmt(self, node: 'ForStmt'): pass
+    
+    @abstractmethod
+    def visit_return_stmt(self, node: 'ReturnStmt'): pass
+    
+    @abstractmethod
+    def visit_break_stmt(self, node: 'BreakStmt'): pass
+    
+    @abstractmethod
+    def visit_continue_stmt(self, node: 'ContinueStmt'): pass
+    
+    @abstractmethod
+    def visit_expr_stmt(self, node: 'ExprStmt'): pass
+    
+    @abstractmethod
+    def visit_block_stmt(self, node: 'BlockStmt'): pass
+    
+    # Left-values
+    @abstractmethod
+    def visit_id_lvalue(self, node: "IdLValue", o: Any = None):
         pass
 
-    # =========================================================================
+    @abstractmethod
+    def visit_array_access_lvalue(self, node: 'ArrayAccessLValue'): pass
+    
     # Expressions
-    # =========================================================================
     @abstractmethod
-    def visit_binary_op(self, node: "BinaryOp", o: Any = None):
-        pass
-
+    def visit_binary_op(self, node: 'BinaryOp'): pass
+    
     @abstractmethod
-    def visit_identifier(self, node: "Identifier", o: Any = None):
-        pass
-
-    # =========================================================================
+    def visit_unary_op(self, node: 'UnaryOp'): pass
+    
+    @abstractmethod
+    def visit_function_call(self, node: 'FunctionCall'): pass
+    
+    @abstractmethod
+    def visit_array_access(self, node: 'ArrayAccess'): pass
+    
+    @abstractmethod
+    def visit_array_literal(self, node: 'ArrayLiteral'): pass
+    
+    @abstractmethod
+    def visit_identifier(self, node: 'Identifier'): pass
+    
     # Literals
-    # =========================================================================
     @abstractmethod
-    def visit_integer_literal(self, node: "IntegerLiteral", o: Any = None):
-        pass
+    def visit_integer_literal(self, node: 'IntegerLiteral'): pass
+    
+    @abstractmethod
+    def visit_float_literal(self, node: 'FloatLiteral'): pass
+    
+    @abstractmethod
+    def visit_boolean_literal(self, node: 'BooleanLiteral'): pass
+    
+    @abstractmethod
+    def visit_string_literal(self, node: 'StringLiteral'): pass

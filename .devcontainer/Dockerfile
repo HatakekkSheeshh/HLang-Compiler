@@ -10,5 +10,5 @@ WORKDIR /workspace
 
 COPY . /workspace
 
-COPY .devcontainer/CS /usr/local/bin/CS
-RUN chmod +x /usr/local/bin/CS
+COPY HLang /usr/local/bin/HLang
+RUN chmod +x /usr/local/bin/HLang

@@ -14,28 +14,28 @@ def main():
         print(f"[ERROR] File {source_code} not found")
         sys.exit(1)
         
-    # 1. Lexer
+    # Lexer
     tokenizer = Tokenizer(code)
     tokens = tokenizer.get_tokens_as_string()
     if "error" in tokens.lower():
         print("Lexer error:", tokens)
         sys.exit(1)
 
-    # 2. Parser
+    # Parser
     parser = Parser(code)
     parse_result = parser.parse()
     if parse_result != "success":
         print("Parser error:", parse_result)
         sys.exit(1)
 
-    # 3. Static Checker
+    # Static Checker
     checker = Checker(source=code)
     check_result = checker.check_from_source()
     if check_result != "Static checking passed":
         print("Static Checker error:", check_result)
         sys.exit(1)
 
-    # 4. Code Generator & Run
+    # Code Generator & Run
     codegen = CodeGenerator()
     output = codegen.generate_and_run(code)
     print("Program output:\n", output)

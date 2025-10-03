@@ -3,3 +3,12 @@ __pycache__/
 *.pyc
 **/__init__.py
 .pytest_cache/
+.venv
+./venv/
+.env
+.idea/
+.vscode/
+.DS_Store
+*.log
+coverage/
+venv/
